@@ -1,3 +1,6 @@
+// Need dynamic for handling multiple types.
+// ignore_for_file: avoid-dynamic
+
 import 'package:flutter/foundation.dart' show Listenable, ValueListenable, listEquals;
 import 'package:flutter/material.dart';
 
@@ -5,7 +8,7 @@ import 'package:flutter/material.dart';
 /// calls given builder function if any one of them changes.
 class MultiValueListenableBuilder extends StatefulWidget {
   /// List of [ValueListenable]s to listen to.
-  final List<ValueListenable> valueListenables;
+  final List<ValueListenable<dynamic>> valueListenables;
 
   /// The builder function to be called when value of any of the [ValueListenable] changes.
   /// The order of values list will be same as [valueListenables] list.
@@ -16,11 +19,11 @@ class MultiValueListenableBuilder extends StatefulWidget {
 
   /// Creates a [MultiValueListenableBuilder] widget.
   const MultiValueListenableBuilder({
-    Key? key,
     required this.valueListenables,
     required this.builder,
+    super.key,
     this.child,
-  }) : super(key: key);
+  });
 
   @override
   State<MultiValueListenableBuilder> createState() => _MultiValueListenableBuilderState();
@@ -47,11 +50,9 @@ class _MultiValueListenableBuilderState extends State<MultiValueListenableBuilde
 
   @override
   Widget build(BuildContext context) => AnimatedBuilder(
-        animation: _mergedListenable,
-        builder: (context, child) {
-          final values = widget.valueListenables.map((v) => v.value).toList();
-          return widget.builder(context, values, child);
-        },
-        child: widget.child,
-      );
+    animation: _mergedListenable,
+    builder: (context, child) =>
+        widget.builder(context, [for (final v in widget.valueListenables) v.value], child),
+    child: widget.child,
+  );
 }

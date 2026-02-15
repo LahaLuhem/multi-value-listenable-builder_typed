@@ -6,7 +6,7 @@ void main() {
     MaterialApp(
       title: 'Multi-ValueListenableBuilder Demo',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: Demo(),
+      home: const Demo(),
     ),
   );
 }
@@ -28,63 +28,58 @@ class _DemoState extends State<Demo> {
   ];
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Multi-ValueListenableBuilder Demo')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 50.0),
-              child: MultiValueListenableBuilder(
-                valueListenables: _argb,
-                builder: (context, values, child) {
-                  return Container(
-                    decoration: ShapeDecoration(
-                      shadows: [BoxShadow(blurRadius: 5)],
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-                      color: Color.fromARGB(
-                        values.elementAt(0), // Alpha
-                        values.elementAt(1), // Red
-                        values.elementAt(2), // Green
-                        values.elementAt(3), // Blue
-                      ),
-                    ),
-                    height: 200,
-                    width: 200,
-                  );
-                },
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: const Text('Multi-ValueListenableBuilder Demo')),
+    body: Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 50),
+            child: MultiValueListenableBuilder(
+              valueListenables: _argb,
+              builder: (context, values, child) => Container(
+                decoration: ShapeDecoration(
+                  shadows: const [BoxShadow(blurRadius: 5)],
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                  ),
+                  color: Color.fromARGB(
+                    values.first as int, // Alpha
+                    values[1] as int, // Red
+                    values[2] as int, // Green
+                    values[3] as int, // Blue
+                  ),
+                ),
+                height: 200,
+                width: 200,
               ),
             ),
-            Column(
-              children: [0, 1, 2, 3]
-                  .map(
-                    (index) => Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text(_labels.elementAt(index), style: TextStyle(fontSize: 20.0)),
-                        ValueListenableBuilder<int>(
-                          valueListenable: _argb.elementAt(index),
-                          builder: (BuildContext context, int value, Widget? child) {
-                            return Slider(
-                              value: value.toDouble(),
-                              max: 255,
-                              min: 0,
-                              onChanged: (newValue) {
-                                _argb[index].value = newValue.toInt();
-                              },
-                            );
+          ),
+          Column(
+            children: [0, 1, 2, 3]
+                .map(
+                  (index) => Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(_labels.elementAt(index), style: const TextStyle(fontSize: 20)),
+                      ValueListenableBuilder<int>(
+                        valueListenable: _argb.elementAt(index),
+                        builder: (context, value, child) => Slider(
+                          value: value.toDouble(),
+                          max: 255,
+                          onChanged: (newValue) {
+                            _argb[index].value = newValue.toInt();
                           },
                         ),
-                      ],
-                    ),
-                  )
-                  .toList(),
-            ),
-          ],
-        ),
+                      ),
+                    ],
+                  ),
+                )
+                .toList(),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
 }

@@ -20,16 +20,15 @@ class TripleValueListenableBuilder<A, B, C> extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: Listenable.merge([
-        firstListenable,
-        secondListenable,
-        thirdListenable,
-      ]),
-      builder: (context, child) => builder(context, firstListenable.value,
-          secondListenable.value, thirdListenable.value, child),
-      child: child,
-    );
-  }
+  Widget build(BuildContext context) => AnimatedBuilder(
+    animation: Listenable.merge([firstListenable, secondListenable, thirdListenable]),
+    builder: (context, child) => builder(
+      context,
+      firstListenable.value,
+      secondListenable.value,
+      thirdListenable.value,
+      child,
+    ),
+    child: child,
+  );
 }
