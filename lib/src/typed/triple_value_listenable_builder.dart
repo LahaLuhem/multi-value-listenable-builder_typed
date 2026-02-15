@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-class TripleValueListenableBuilder<A, B, C> extends StatelessWidget {
+class TripleValueListenableBuilder<A, B, C> extends StatefulWidget {
   final ValueListenable<A> firstListenable;
   final ValueListenable<B> secondListenable;
   final ValueListenable<C> thirdListenable;
@@ -20,15 +20,52 @@ class TripleValueListenableBuilder<A, B, C> extends StatelessWidget {
   });
 
   @override
+  State<TripleValueListenableBuilder<A, B, C>> createState() =>
+      _TripleValueListenableBuilderState<A, B, C>();
+}
+
+class _TripleValueListenableBuilderState<A, B, C>
+    extends State<TripleValueListenableBuilder<A, B, C>> {
+  late Listenable _mergedListenable;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _mergedListenable = Listenable.merge([
+      widget.firstListenable,
+      widget.secondListenable,
+      widget.thirdListenable,
+    ]);
+  }
+
+  @override
+  void didUpdateWidget(covariant TripleValueListenableBuilder<A, B, C> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.firstListenable == widget.firstListenable &&
+        oldWidget.secondListenable == widget.secondListenable &&
+        oldWidget.thirdListenable == widget.thirdListenable) {
+      return;
+    }
+
+    _mergedListenable = Listenable.merge([
+      widget.firstListenable,
+      widget.secondListenable,
+      widget.thirdListenable,
+    ]);
+  }
+
+  @override
   Widget build(BuildContext context) => ListenableBuilder(
-    listenable: Listenable.merge([firstListenable, secondListenable, thirdListenable]),
-    builder: (context, child) => builder(
+    listenable: _mergedListenable,
+    builder: (context, child) => widget.builder(
       context,
-      firstListenable.value,
-      secondListenable.value,
-      thirdListenable.value,
+      widget.firstListenable.value,
+      widget.secondListenable.value,
+      widget.thirdListenable.value,
       child,
     ),
-    child: child,
+    child: widget.child,
   );
 }

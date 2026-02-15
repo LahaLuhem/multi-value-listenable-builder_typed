@@ -2,6 +2,7 @@
 ### Changed
 - Minimum dart version bumped to 3.8
 - Internal implementation changed from AnimatedBuilder to ListenableBuilder
+- More optimized builders by caching of `mergedListenable`
 
 ## 0.1.1 - 2024-11-26
 ### Fixed

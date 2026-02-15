@@ -43,6 +43,7 @@ class _MultiValueListenableBuilderState extends State<MultiValueListenableBuilde
   @override
   void didUpdateWidget(covariant MultiValueListenableBuilder oldWidget) {
     super.didUpdateWidget(oldWidget);
+
     if (listEquals(oldWidget.valueListenables, widget.valueListenables)) return;
 
     _mergedListenable = Listenable.merge(widget.valueListenables);
@@ -51,8 +52,9 @@ class _MultiValueListenableBuilderState extends State<MultiValueListenableBuilde
   @override
   Widget build(BuildContext context) => ListenableBuilder(
     listenable: _mergedListenable,
-    builder: (context, child) =>
-        widget.builder(context, [for (final v in widget.valueListenables) v.value], child),
+    builder: (context, child) => widget.builder(context, [
+      for (final valueListenables in widget.valueListenables) valueListenables.value,
+    ], child),
     child: widget.child,
   );
 }
