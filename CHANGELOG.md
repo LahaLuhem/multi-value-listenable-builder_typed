@@ -1,4 +1,4 @@
-## Unreleased
+## 0.2.0 - 2026-02-15
 ### Changed
 - Minimum dart version bumped to 3.8
 - Internal implementation changed from AnimatedBuilder to ListenableBuilder

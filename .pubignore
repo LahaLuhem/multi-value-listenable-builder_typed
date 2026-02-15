@@ -1,0 +1,4 @@
+analysis_options.yaml
+example/
+!example/lib/main.dart
+test/
