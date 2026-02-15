@@ -1,3 +1,7 @@
+## 0.2.1 - 2026-02-15
+### Added
+- Example
+
 ## 0.2.0 - 2026-02-15
 ### Changed
 - Minimum dart version bumped to 3.8
