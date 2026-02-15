@@ -20,8 +20,8 @@ class MultiValueListenableBuilder extends StatefulWidget {
   const MultiValueListenableBuilder({
     required this.valueListenables,
     required this.builder,
-    super.key,
     this.child,
+    super.key,
   });
 
   @override
@@ -34,14 +34,15 @@ class _MultiValueListenableBuilderState extends State<MultiValueListenableBuilde
   @override
   void initState() {
     super.initState();
+    _asserts();
 
-    assert(widget.valueListenables.isNotEmpty, 'valueListenables must not be empty');
     _mergedListenable = Listenable.merge(widget.valueListenables);
   }
 
   @override
   void didUpdateWidget(covariant MultiValueListenableBuilder oldWidget) {
     super.didUpdateWidget(oldWidget);
+    _asserts();
 
     if (listEquals(oldWidget.valueListenables, widget.valueListenables)) return;
 
@@ -56,4 +57,8 @@ class _MultiValueListenableBuilderState extends State<MultiValueListenableBuilde
     ], child),
     child: widget.child,
   );
+
+  void _asserts() {
+    assert(widget.valueListenables.isNotEmpty, 'valueListenables must not be empty');
+  }
 }

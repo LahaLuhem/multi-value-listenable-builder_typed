@@ -1,3 +1,7 @@
+## Unreleased
+### Changed
+- asserts in didUpdateWidget
+
 ## 0.2.1 - 2026-02-15
 ### Added
 - Example
