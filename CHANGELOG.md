@@ -1,3 +1,7 @@
+## 0.1.1
+
+* Fix bug with third listenable in TripleValueListenableBuilder not triggering on value change
+
 ## 0.1.0
 
 * Add typed variants for DualValueListenableBuilder and TripleValueListenableBuilder
