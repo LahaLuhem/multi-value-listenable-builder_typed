@@ -5,24 +5,22 @@ void main() {
   runApp(
     MaterialApp(
       title: 'Multi-ValueListenableBuilder Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData(primarySwatch: Colors.blue),
       home: Demo(),
     ),
   );
 }
 
 class Demo extends StatefulWidget {
-  Demo({Key? key}) : super(key: key);
+  const Demo({super.key});
 
   @override
-  _DemoState createState() => _DemoState();
+  State<Demo> createState() => _DemoState();
 }
 
 class _DemoState extends State<Demo> {
-  List<String> _labels = ['Alpha', 'Red', 'Green', 'Blue'];
-  List<ValueNotifier<int>> _argb = [
+  static const _labels = ['Alpha', 'Red', 'Green', 'Blue'];
+  final List<ValueNotifier<int>> _argb = [
     ValueNotifier(255), // Alpha
     ValueNotifier(255), // Red
     ValueNotifier(255), // Green
@@ -32,9 +30,7 @@ class _DemoState extends State<Demo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Multi-ValueListenableBuilder Demo'),
-      ),
+      appBar: AppBar(title: Text('Multi-ValueListenableBuilder Demo')),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -47,9 +43,7 @@ class _DemoState extends State<Demo> {
                   return Container(
                     decoration: ShapeDecoration(
                       shadows: [BoxShadow(blurRadius: 5)],
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                       color: Color.fromARGB(
                         values.elementAt(0), // Alpha
                         values.elementAt(1), // Red
@@ -69,14 +63,10 @@ class _DemoState extends State<Demo> {
                     (index) => Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text(
-                          _labels.elementAt(index),
-                          style: TextStyle(fontSize: 20.0),
-                        ),
+                        Text(_labels.elementAt(index), style: TextStyle(fontSize: 20.0)),
                         ValueListenableBuilder<int>(
                           valueListenable: _argb.elementAt(index),
-                          builder:
-                              (BuildContext context, int value, Widget? child) {
+                          builder: (BuildContext context, int value, Widget? child) {
                             return Slider(
                               value: value.toDouble(),
                               max: 255,
@@ -86,7 +76,7 @@ class _DemoState extends State<Demo> {
                               },
                             );
                           },
-                        )
+                        ),
                       ],
                     ),
                   )
