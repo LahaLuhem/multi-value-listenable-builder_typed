@@ -17,8 +17,8 @@ class DualValueListenableBuilder<A, B> extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => AnimatedBuilder(
-    animation: Listenable.merge([firstListenable, secondListenable]),
+  Widget build(BuildContext context) => ListenableBuilder(
+    listenable: Listenable.merge([firstListenable, secondListenable]),
     builder: (context, child) =>
         builder(context, firstListenable.value, secondListenable.value, child),
     child: child,

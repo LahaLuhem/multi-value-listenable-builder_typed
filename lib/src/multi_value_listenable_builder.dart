@@ -49,8 +49,8 @@ class _MultiValueListenableBuilderState extends State<MultiValueListenableBuilde
   }
 
   @override
-  Widget build(BuildContext context) => AnimatedBuilder(
-    animation: _mergedListenable,
+  Widget build(BuildContext context) => ListenableBuilder(
+    listenable: _mergedListenable,
     builder: (context, child) =>
         widget.builder(context, [for (final v in widget.valueListenables) v.value], child),
     child: widget.child,
