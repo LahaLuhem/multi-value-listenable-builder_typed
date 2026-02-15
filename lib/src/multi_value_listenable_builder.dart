@@ -1,11 +1,10 @@
 // Need dynamic for handling multiple types.
 // ignore_for_file: avoid-dynamic
 
-import 'package:flutter/foundation.dart' show Listenable, ValueListenable, listEquals;
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 
-/// This widget listens to multiple [ValueListenable]s and
-/// calls given builder function if any one of them changes.
+/// This widget listens to multiple [ValueListenable]s and calls given builder function if any one of them changes.
 class MultiValueListenableBuilder extends StatefulWidget {
   /// List of [ValueListenable]s to listen to.
   final List<ValueListenable<dynamic>> valueListenables;
