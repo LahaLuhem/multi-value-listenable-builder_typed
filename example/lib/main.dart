@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:multi_value_listenable_builder/multi_value_listenable_builder.dart';
+import 'package:multi_value_listenable_builder_typed/multi_value_listenable_builder_typed.dart';
 
 void main() {
   runApp(

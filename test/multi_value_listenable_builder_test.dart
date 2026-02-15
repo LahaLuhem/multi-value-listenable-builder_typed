@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:multi_value_listenable_builder/multi_value_listenable_builder.dart';
+import 'package:multi_value_listenable_builder_typed/src/multi_value_listenable_builder.dart';
 
 List<ValueNotifier<int>> listenables = [
   ValueNotifier(1),
