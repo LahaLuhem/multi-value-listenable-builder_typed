@@ -1,71 +1,118 @@
 # MultiValueListenableBuilder
 
-A widget to listen to
-multiple [ValueListenable](https://api.flutter.dev/flutter/widgets/ValueListenableBuilder-class.html)
-s in Flutter.
+[![pub package](https://img.shields.io/pub/v/multi_value_listenable_builder_typed.svg?logo=dart&logoColor=white)](https://pub.dev/packages/multi_value_listenable_builder_typed)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-![pub](https://img.shields.io/pub/v/multi_value_listenable_builder?logo=multivaluelistenablebuilder)
+A Flutter widget that listens to multiple [`ValueListenable`](https://api.flutter.dev/flutter/foundation/ValueListenable-class.html)s and rebuilds when any of them changes. This package provides both a flexible dynamic version and type‑safe variants for 2 or 3 listenables.
 
-## Reason for the fork
+---
 
-This is fork-and-rewrap of the the
-original [multi_value_listenable_builder](https://github.com/ufrshubham/multi-value-listenable-builder)
-package. This aims to provide type-safety, instead of using dynamic listneables, that need
-type-casting at the time of builder definition.
+## Features
 
-### Available type-safe variants:
+- ✅ Listen to any number of `ValueListenable`s with the generic `MultiValueListenableBuilder`
+- ✅ Type‑safe builders for two (`DualValueListenableBuilder<A, B>`) and three (`TripleValueListenableBuilder<A, B, C>`) listenables
+- ✅ Optional `child` parameter to optimise rebuilds for static subtrees
+- ✅ Built on Flutter’s own `ListenableBuilder` for efficiency
+- ✅ Zero dependencies beyond Flutter
 
-1. [DualValueListenableBuilder](lib/src/typed/dual_value_listenable_builder.dart)
-2. [TripleValueListenableBuilder](lib/src/typed/triple_value_listenable_builder.dart)
+## Installation
+
+Add the package to your `pubspec.yaml`:
+
+```yaml
+dependencies:
+  multi_value_listenable_builder_typed: ^1.0.0   # replace with latest version
+```
+Then run `flutter pub get`.
 
 ## Usage
-
-1. Add the multi_value_listenable_builder as a dependency in your project.
-
-2. Import `package:multi_value_listenable_builder_typed/multi_value_listenable_builder_typed.dart`
-   in required
-   files.
-
-3. Use the typed variants for typed callbacks.
-
-4. Use `MultiValueListenableBuilder`, for more listenable, just like any other widget.
+Import the package:
 
 ```dart
 import 'package:multi_value_listenable_builder_typed/multi_value_listenable_builder_typed.dart';
+```
 
-MultiValueListenableBuilder
-(
-// Add all ValueListenables here.
-valueListenables: [
-listenable0,
-listenable1,
-listenable2,
-    .
-    .
-listenableN
-],
-builder: (context, values, child) {
-// Get the updated value of each listenable
-// in values list.
-return YourWidget(
-values.elementAt(0),
-values.elementAt(1),
-values.elementAt(2),
-    .
-    .
-values.elementAt(N),
-child: child // Optional child.
-);
-},
-child
-:
-YourOptionalChildWidget
-(
-)
-,
+### Type-safe variants
+
+#### `DualValueListenableBuilder<A, B>`
+```dart
+final ValueNotifier<String> nameNotifier = ValueNotifier('Alice');
+final ValueNotifier<int> ageNotifier = ValueNotifier(30);
+
+DualValueListenableBuilder<String, int>(
+  firstListenable: nameNotifier,
+  secondListenable: ageNotifier,
+  builder: (context, name, age, _) => Text('$name is $age years old'),
 )
 ```
 
-A detailed and working example can be
-found [here](https://github.com/ufrshubham/multi-value-listenable-builder/tree/main/example/).
+#### `TripleValueListenableBuilder<A, B, C>`
+```dart
+final ValueNotifier<String> nameNotifier = ValueNotifier('Alice');
+final ValueNotifier<int> ageNotifier = ValueNotifier(30);
+final ValueNotifier<bool> activeNotifier = ValueNotifier(true);
 
+TripleValueListenableBuilder<String, int, bool>(
+  firstListenable: nameNotifier,
+  secondListenable: ageNotifier,
+  thirdListenable: activeNotifier,
+  builder: (context, name, age, active, _) => Text('$name is $age years old and ${active ? 'active' : 'inactive'}'),
+)
+```
+
+### Flexible dynamic variant (any number of listenables)
+`MultiValueListenableBuilder` takes a `List<ValueListenable<dynamic>>` and passes a `List<dynamic>` to the builder.
+The order of values matches the order of the provided listenables.
+```dart
+MultiValueListenableBuilder(
+  valueListenables: [
+    nameNotifier,
+    ageNotifier,
+    activeNotifier,
+    // ... any number of listenables
+  ],
+  builder: (context, values, child) {
+    final name = values[0] as String;
+    final age = values[1] as int;
+    final active = values[2] as bool;
+    return Text('$name, $age, active: $active');
+  },
+  child: SomeStaticWidget(), // optional – won’t rebuild on changes
+)
+```
+> Note: Because `values` is a `List<dynamic>`, you need to cast each element to its expected type. 
+> For a small, fixed number of listenables the typed variants are cleaner and safer.
+ 
+## Motivation
+The original [`multi_value_listenable_builder`](https://pub.dev/packages/multi_value_listenable_builder) package uses a `List<ValueListenable<dynamic>>` and passes a `List<dynamic>` to the builder.
+While this works for any number of listenables, it sacrifices type safety – you must manually cast values inside the builder.
+
+This fork adds **type‑safe variants** for 2 and 3 listenables, keeping the original dynamic version for cases where the number of listenables is variable or large.
+
+## Optimising rebuilds with `child`
+All three widgets accept an optional `child` parameter.
+This child is passed to the builder and can be used for parts of the widget tree that do not depend on the listenable values.
+The child is built only once and reused across rebuilds, improving performance.
+```dart
+MultiValueListenableBuilder(
+  valueListenables: [nameNotifier, ageNotifier],
+  child: Icon(Icons.person),             // never rebuilt
+  builder: (context, values, child) => Column(
+      children: [
+        Text('Name: ${values.first}'),   // changes
+        Text('Age: ${values[1]}'),       // changes
+        ?child,        // static part
+      ],
+    ),
+)
+```
+
+## Examples
+A complete working example can be found in the [example](example/) folder of the original repository.
+
+## Contributing
+Issues and pull requests are welcome!<br>
+Please ensure that any changes are covered by tests and that the example app still runs.
+
+## License
+This package is licensed under the [MIT License](LICENSE).
